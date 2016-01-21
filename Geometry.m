@@ -60,6 +60,8 @@ classdef Geometry
                     [obj.nodes,obj.elements] = getRectangle(obj.h);
                 case 'square'
                     [obj.nodes,obj.elements] = getSquare;
+                case 'triangle'
+                    [obj.nodes,obj.elements] = getTriangle;
                 otherwise
             end
             X = obj.nodes(:,1);
@@ -378,4 +380,12 @@ end
 function [Nodes,Elements] = getCircle(h)
 fd=inline('sqrt(sum(p.^2,2))-1','p');
 [Nodes,Elements]=distmesh2d(fd,@huniform,h,[-1,-1;1,1],[]);
+end
+function [Nodes,Elements] = getTriangle
+Nodes = [...
+    5,10;
+    7,12;
+    30,104];
+Elements = [...
+    1 2 3];
 end

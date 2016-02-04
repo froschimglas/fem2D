@@ -53,6 +53,9 @@ classdef Geometry
             obj.shape = newshape;
         end
         function obj = getData(obj,newshape)
+            % internal method to load a predefined shape, available
+            % options: circle, rectangle, square, triangle
+            
             switch newshape
                 case 'circle'
                     [obj.nodes,obj.elements] = getCircle(obj.h);
@@ -112,6 +115,8 @@ classdef Geometry
              elementVertices = obj.getNodes(globNodes);
         end
         function nodesOnEdge = getEdgeVertices(obj,edgeIndices)
+            % returns a list of coordinates corresponding to the nodes of
+            % given edge indices 
             e = edges(obj.tr);
             nodesOnEdge = zeros( length(edgeIndices)*2,3 );
             
@@ -133,6 +138,7 @@ classdef Geometry
             nodesOnEdge = nodesOnEdge(:,2:3);
         end
         function locElem = getLocalElement(obj,elem)
+            % returns an ELEMENT object where elem is an element index
             elemNodes = obj.getVertices(elem);
             locElem = Element(elemNodes);
         end
@@ -165,6 +171,9 @@ classdef Geometry
         
         % REFINEMENT METHODS
         function refGeo = refine(obj,markedElements)
+            % refine the elements with indices in markedElements, if no
+            % argument is given, uniform refinement is performed.
+            
             if nargin<2
                 % refine all
                 markedElements = obj.nmbElements:-1:1;
@@ -204,6 +213,7 @@ classdef Geometry
             end
         end
         function plotEdges(obj)
+            % plots the mesh with indices of the edges
             triplot(obj.tr);
             
             e = edges(obj.tr);
@@ -322,6 +332,7 @@ end
 
 %% Geometry data
 function [Nodes,Elements] = getSquare()
+% Unit square [0,1] x [0,1]
 Nodes = [...
     0 0;
     1 0;
@@ -336,10 +347,11 @@ Elements = [ ...
     3 2 5];
 end
 function [Nodes,Elements] = getRectangle(h)
-a = 1;
-b = -1;
-c = 1;
-d = -1;
+% A square from [-1,1] x [-1,1]
+a = -1;
+b =  1;
+c = -1;
+d =  1;
 
 
 nX = ceil(1/h)+1;
@@ -378,10 +390,13 @@ for i=1:nX-1
 end
 end
 function [Nodes,Elements] = getCircle(h)
+% A circle with radius 1 around 0
+% be careful, distmesh must be on the matlab path!
 fd=inline('sqrt(sum(p.^2,2))-1','p');
 [Nodes,Elements]=distmesh2d(fd,@huniform,h,[-1,-1;1,1],[]);
 end
 function [Nodes,Elements] = getTriangle
+% a simple triangle
 Nodes = [...
     5,10;
     7,12;

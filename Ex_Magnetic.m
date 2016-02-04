@@ -1,24 +1,23 @@
-function [G,rodNodes] = Ex_Magnetic()
+function G = Ex_Magnetic()
 % Load geometry
 G = Geometry(0.25);
 G.shape = 'rectangle';
 
-G.plotEdges;
-% user must provide edge numbers for the rod:
-rodNodes = [35,32,29,27];
-rodNodes = G.getEdgeVertices(rodNodes);
+%G.plotEdges;
 
-%G = G.refine;
+G = G.refine;
 G.plot;
 
 % Load Finite Elements on Triangles
-FE = linearFE;
+FE2d = linearFE;
+FE1d = quadraticFE;
 
 % Assemble system matrix
-A = AssembleDomainMatrix(G,FE,@bilinearform);
+%A = AssembleDomainMatrix(G,FE,@bilinearform);
+A = AssembleMixedDomainMatrix(G,FE1d,FE2d,@bilinearform);
 
 % Assemble right hand side
-b = AssembleDomainVector(G,FE,@linearform);
+b = AssembleDomainVector(G,FE2d,@linearform);
 
 % Apply boundary conditions
 [A,b] = ApplyBcDirichlet(G,A,b);
@@ -44,7 +43,9 @@ mu11=1;
 mu22=1;
 
 
-a = mu11*basisi.dx .* basisj.dx + mu22*basisi.dy .* basisj.dy;
+a = basisi.dx .* basisj.dx;
+
+
 end
 
 % Linear form f(phi) = (f,phi)

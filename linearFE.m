@@ -6,22 +6,30 @@ classdef linearFE
 % (c) Daniela Fusseder, Technische Universität Kaiserslautern, 2015    
     
    properties
+       % basis functions in a reference triangle
        b1 = @(x,y) 1-x-y;
        b2 = @(x,y) x;
        b3 = @(x,y) y;
        
+       % derivatives of basis functions in reference triangle
        db1= @(x,y) [-1;-1];
        db2= @(x,y) [ 1; 0];
        db3= @(x,y) [ 0; 1];
        
+       % basis functions over the boundary of a reference triangle
        s1 =@(s) s;
        s2 =@(s) 1-s;
        
+       % derivatives of basis functions on the boundary of reference
+       % triangle
        ds1=@(s)  ones(length(s));
        ds2=@(s) -ones(length(s));
        
+       % number of basis functions in one element
        nBasis = 3;
-       m = 3;
+       
+       % quadrature rule
+       m = 2;
    end
    methods
        function obj = linearFE(quadrule)
@@ -85,6 +93,6 @@ classdef linearFE
                    phi.eval = obj.s2(s);
                    phi.ds = obj.ds2(s);
            end
-       end
+       end       
    end
 end

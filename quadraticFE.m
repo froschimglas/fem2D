@@ -1,31 +1,35 @@
 classdef quadraticFE
-% linearFE class quadraticFE
-%   The quadraticFE class realises quadratic finite elements over 1D
-%   intervalls
+% quadraticFE class quadraticFE
+%   The quadraticFE class realises quadratic finite elements over triangles
 %
 % (c) Daniela Fusseder, Technische Universität Kaiserslautern, 2015    
     
    properties
-       b1 = @(x,y) 2*(x-1).*(x-0.5);
-       b2 = @(x,y) 2*x.*(x-0.5);
-       b3 = @(x,y) 4*x-4*x.*x;
+       b1 = @(x,y) (1-x-y).*(1-2*x-2*y);
+       b2 = @(x,y) x.*(2*x-1);
+       b3 = @(x,y) y.*(2*y-1);
+       b4 = @(x,y) 4*x.*(1-x-y);
+       b5 = @(x,y) 4*x.*y;
+       b6 = @(x,y) 4*y.*(1-x-y);
+%        
+%        db1= @(x,y) [-1;-1];
+%        db2= @(x,y) [ 1; 0];
+%        db3= @(x,y) [ 0; 1];
+%        db4= @(x,y) 
+%        db5= @(x,y) 
+%        db6= @(x,y) 
        
-       db1= @(x,y) 4*x-3;
-       db2= @(x,y) 4*x-1;
-       db3= @(x,y) 4-8*x;
+%        s1 =@(s) s;
+%        s2 =@(s) 1-s;
+%        
+%        ds1=@(s)  ones(length(s));
+%        ds2=@(s) -ones(length(s));
        
-       % TODO: stimmt noch nicht!!!
-       s1 =@(s) s;
-       s2 =@(s) 1-s;
-       
-       ds1=@(s)  ones(length(s));
-       ds2=@(s) -ones(length(s));
-       
-       nBasis = 3;
+       nBasis = 6;
        m = 3;
    end
    methods
-       function obj = quadraticFE(quadrule)
+       function obj = linearFE(quadrule)
            % constructor
            if nargin>1
                obj.m = quadrule;
@@ -49,7 +53,6 @@ classdef quadraticFE
                error('only first derivative implemented yet');
            end
            
-          
            switch i
                case 1
                    phi = obj.db1(x,y);
@@ -71,11 +74,10 @@ classdef quadraticFE
            phi.eval = obj.basisfunction(i,x,y);
            
            if derivs >0
-               grad = obj.derivBasisfunction(i,x,y,1);           
-               grad = [grad;zeros(1,size(x,2))];
+               grad = obj.derivBasisfunction(i,x,y,1);                                            
                grad = Z'\grad;
-               phi.dx = grad(1,:);
-               phi.dy = grad(2,:);
+               phi.dx = grad(1)*ones(size(x));
+               phi.dy = grad(2)*ones(size(x));
            end
        end       
        function phi = boundarybasis(obj,i,s)

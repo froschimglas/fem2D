@@ -6,7 +6,7 @@ function b = ApplyBcNeumann(geo,femrule,b,g)
 %
 % (c) Daniela Fusseder, Technische Universität Kaiserslautern, 2015
 
-% TODO: Apply Dirichlet Boundary Conditions only on elements given by user input 
+% TODO: Apply Neumann Boundary Conditions only on elements given by user input 
 
 Gauss = Quad1D(femrule.m);
 

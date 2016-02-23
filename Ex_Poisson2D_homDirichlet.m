@@ -21,6 +21,7 @@ G.plot
 
 % Load Finite Elements on Triangles
 FE = linearFE;
+FE.m = 3; % default quadrature rule = 2 for linear finite elements
 
 % Assemble right hand side
 b = AssembleDomainVector(G,FE,@linearform);

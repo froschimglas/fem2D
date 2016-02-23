@@ -56,16 +56,16 @@ points = Gauss.getQuadPointInfo(K);
 
 % pre evaluate element basis functions
 [~,Z] = Gauss.trafo(K);
-basisfunctions = cell(3,1);
-for i=1:3
+basisfunctions = cell(femrule.nBasis,1);
+for i=1:femrule.nBasis
     basisfunctions{i} = femrule.basis(i,points.refx,points.refy,Z);
 end
 
 % test bilinearform with each basis function combination
 detTrafo = Gauss.detTrafo(K);
-values = zeros(3);
-for i=1:3
-    for j=1:3
+values = zeros(femrule.nBasis);
+for i=1:femrule.nBasis
+    for j=1:femrule.nBasis
         phii = basisfunctions{i};
         phij = basisfunctions{j};
         
@@ -76,5 +76,5 @@ for i=1:3
     end
 end
 
-values = reshape(values,1,9);
+values = reshape(values,1,(femrule.nBasis)^2);
 end

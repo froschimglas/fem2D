@@ -9,7 +9,7 @@ close all;
 
 if nargin==0   
     % Load geometry
-    G = Geometry(0.02);
+    G = Geometry(0.2);
     G.shape = 'rectangle';
 else   
     % Refine triangulation uniformly
